@@ -8,28 +8,33 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
+import Link from "next/link";
 
 const ProductsCard = ({ product }) => {
   return (
-    <Card>
+    <Card className="flex flex-col">
       <CardHeader>
-        <div className="w-[10vw]">
-          <img src={product.image} alt={product.title} className="w-full" />
+        {/* Usamos un div con aspect ratio para mantener el espacio de la imagen mientras carga */}
+        <div className="relative w-full h-48">
+          <Image
+            src={product.image}
+            alt={product.title}
+            fill // 'fill' hace que la imagen llene el contenedor padre
+            style={{ objectFit: "contain" }} // 'contain' asegura que toda la imagen sea visible
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         </div>
-        {/*         <Image
-          src={product.image}
-          alt={product.title}
-          width={500}
-          height={500}
-        /> */}
-        <CardTitle>{product.title}</CardTitle>
-        <CardDescription>Card Description</CardDescription>
+        <CardTitle className="truncate h-7 mt-4">{product.title}</CardTitle>
+        <CardDescription>{product.category}</CardDescription>
       </CardHeader>
-      <CardContent>
-        <p>Card Content</p>
+      <CardContent className="flex-grow">
+        <p className="font-bold text-lg">${product.price}</p>
       </CardContent>
       <CardFooter>
-        <p>Card Footer</p>
+        {/* Enlace que nos llevará a la página de detalle */}
+        <Link href={`/products/${product.id}`} className="w-full">
+          Ver Detalle
+        </Link>
       </CardFooter>
     </Card>
   );
