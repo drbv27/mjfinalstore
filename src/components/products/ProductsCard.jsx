@@ -32,9 +32,14 @@ const ProductsCard = ({ product }) => {
       </CardContent>
       <CardFooter>
         {/* Enlace que nos llevará a la página de detalle */}
-        <Link href={`/products/${product.id}`} className="w-full">
-          Ver Detalle
-        </Link>
+        <div className="flex flex-col">
+          <Link href={`/products/${product.id}`} className="w-full">
+            Ver Detalle
+          </Link>
+          <button className="p-2 border rounded-sm bg-teal-600 text-white font-bold">
+            Añadir al carrito
+          </button>
+        </div>
       </CardFooter>
     </Card>
   );

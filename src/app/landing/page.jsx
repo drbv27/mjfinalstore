@@ -9,7 +9,7 @@ const LandingPage = () => {
       <p className="font-semibold text-teal-800">
         Encuentra los mejores productos para todas tus necesidades
       </p>
-      <Counter />
+      {/* <Counter /> */}
     </div>
   );
 };
