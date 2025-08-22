@@ -9,8 +9,11 @@ import {
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import { useCartStore } from "@/store/cart-store";
 
 const ProductsCard = ({ product }) => {
+  const { addProduct } = useCartStore();
+
   return (
     <Card className="flex flex-col">
       <CardHeader>
@@ -36,7 +39,10 @@ const ProductsCard = ({ product }) => {
           <Link href={`/products/${product.id}`} className="w-full">
             Ver Detalle
           </Link>
-          <button className="p-2 border rounded-sm bg-teal-600 text-white font-bold">
+          <button
+            onClick={() => addProduct(product)}
+            className="p-2 border rounded-sm bg-teal-600 text-white font-bold"
+          >
             Añadir al carrito
           </button>
         </div>

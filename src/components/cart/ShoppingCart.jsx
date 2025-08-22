@@ -7,8 +7,21 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { ShoppingBasket } from "lucide-react";
+import { useCartStore } from "@/store/cart-store";
+import { Separator } from "../ui/separator";
 
 const ShoppingCart = () => {
+  const {
+    items,
+    removeProduct,
+    incrementQuantity,
+    getTotalItems,
+    getTotalPrice,
+  } = useCartStore();
+
+  const totalItems = getTotalItems();
+  const totalPrice = getTotalPrice();
+
   return (
     <Sheet>
       <SheetTrigger asChild>
@@ -20,8 +33,33 @@ const ShoppingCart = () => {
 
       <SheetContent className="w-[400px] sm:w-[540px]">
         <SheetHeader>
-          <SheetTitle>Are you absolutely sure?</SheetTitle>
+          <SheetTitle>Mi Carrito de compras</SheetTitle>
         </SheetHeader>
+        {/* ustedes deben organizar el carrito */}
+        <div>
+          {items.map((item) => (
+            <p>
+              {item.title}
+              <button className="bg-slate-400 p-1">-</button>
+              <span className="bg-teal-700 text-white">{item.quantity}</span>
+              <button
+                onClick={() => incrementQuantity(item.id)}
+                className="bg-slate-400 p-1"
+              >
+                +
+              </button>
+              <button
+                onClick={() => removeProduct(item.id)}
+                className="bg-red-700 text-white font-bold"
+              >
+                x
+              </button>
+            </p>
+          ))}
+        </div>
+        <Separator />
+        <div>Total productos:{totalItems}</div>
+        <div>Total a pagar:{totalPrice}</div>
       </SheetContent>
     </Sheet>
   );
