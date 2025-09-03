@@ -13,9 +13,11 @@ const ProductDetailPage = ({ params }) => {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const response = await axios.get(`/api/products/${productid}`);
+      const response = await axios.get(
+        `https://fakestoreapi.com/products/${productid}`
+      );
       //console.log(response);
-      setProduct(response.data.data);
+      setProduct(response.data);
       setError(null);
       setLoading(false);
     };

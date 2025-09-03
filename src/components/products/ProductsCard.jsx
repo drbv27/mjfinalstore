@@ -36,7 +36,7 @@ const ProductsCard = ({ product }) => {
       <CardFooter>
         {/* Enlace que nos llevará a la página de detalle */}
         <div className="flex flex-col">
-          <Link href={`/products/${product.id}`} className="w-full">
+          <Link href={`/products/${product._id}`} className="w-full">
             Ver Detalle
           </Link>
           <button
