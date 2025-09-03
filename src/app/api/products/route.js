@@ -23,68 +23,53 @@ export async function GET() {
   }
 }
 
-/* export async function POST(request) {
-  await dbConnect();
-
-  try {
-    const body = await request.json(); //leemos el cuerpo de la peticion
-    const product = await Product.create(body);
-    return NextResponse.json({ success: true, data: product }, { status: 201 });
-  } catch (error) {
-    return NextResponse.json(
-      { succes: false, error: error.message },
-      { status: 400 }
-    );
-  }
-} */
-
-async function uploadToCloudinary(file) {
-  const arrayBuffer = await file.arrayBuffer();
-  const buffer = Buffer.from(arrayBuffer);
-
-  return new Promise((resolve, reject) => {
-    cloudinary.uploader
-      .upload_stream({ resource_type: "auto" }, (error, result) => {
-        if (error) {
-          console.error("Cloudinary upload error:", error);
-          return reject(new Error("Error al subir la imagen a Cloudinary."));
-        }
-        if (!result) {
-          return reject(new Error("No se obtuvo resultado de Cloudinary."));
-        }
-        resolve(result.secure_url);
-      })
-      .end(buffer);
-  });
-}
-
 export async function POST(request) {
   await dbConnect();
 
   try {
     const formData = await request.formData();
     const file = formData.get("image");
+
     if (!file) {
       return NextResponse.json(
-        { success: false, error: "hace falta el archivo" },
+        { success: false, error: "la imagen es requerida." },
         { status: 400 }
       );
     }
 
-    const image = await uploadToCloudinary(file);
-    return NextResponse.json({ success: true, image }, { status: 200 });
-  } catch (error) {
-    console.error("Error en la API de subida:", error);
-    const errorMessage =
-      error instanceof Error
-        ? error.message
-        : "Error interno del servidor al procesar la subida.";
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return NextResponse.json(
-      {
-        success: false,
-        error: errorMessage,
+    //1.Subir la imagen
+    const arrayBuffer = await file.arrayBuffer();
+    const buffer = Buffer.from(arrayBuffer);
+    const cloudinaryUploadResult = await new Promise((resolve, reject) => {
+      cloudinary.uploader
+        .upload_stream({}, (error, result) => {
+          if (error) reject(error);
+          resolve(result);
+        })
+        .end(buffer);
+    });
+
+    //2.Crear el producto en MongoDB con la url de la imagen
+    const newProduct = await Product.create({
+      title: formData.get("title"),
+      description: formData.get("description"),
+      price: formData.get("price"),
+      category: formData.get("category"),
+      rating: {
+        rate: 0,
+        count: 0,
       },
+      image: cloudinaryUploadResult.secure_url,
+      imagePublicId: cloudinaryUploadResult.public_id,
+    });
+
+    return NextResponse.json(
+      { success: true, data: newProduct },
+      { status: 201 }
+    );
+  } catch (error) {
+    return NextResponse(
+      { status: false, error: "Error interno del servidor" },
       { status: 500 }
     );
   }
