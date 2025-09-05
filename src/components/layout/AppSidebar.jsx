@@ -1,4 +1,4 @@
-import { Home, Boxes, Rocket } from "lucide-react";
+import { Home, Boxes, Rocket, Settings, Settings2 } from "lucide-react";
 
 import {
   Sidebar,
@@ -10,6 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import ShoppingCart from "../cart/ShoppingCart";
 import Logo from "./Logo";
@@ -53,6 +54,15 @@ export function AppSidebar() {
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
+              <Separator className="my-2" />
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/products">
+                    <Settings />
+                    <span>Admin</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

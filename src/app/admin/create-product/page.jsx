@@ -15,6 +15,7 @@ const CreateProductPage = () => {
   });
   const [imageFile, setImageFile] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
   const router = useRouter();
 
   const handleChange = (e) => {
