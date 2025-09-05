@@ -30,11 +30,13 @@ const CreateProductDialog = ({ onProductCreated }) => {
   const handleSubmit = async (e) => {
     console.log("enviando");
   };
-  const handleChange = async (e) => {
-    console.log("escribiendo");
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setProductData((prev) => ({ ...prev, [name]: value }));
   };
-  const handleFileChange = async (e) => {
-    console.log("archivo....");
+
+  const handleFileChange = (e) => {
+    setImageFile(e.target.files[0]);
   };
 
   return (

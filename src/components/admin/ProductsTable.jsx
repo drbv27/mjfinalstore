@@ -1,5 +1,6 @@
 "use client";
-import React from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import {
   Table,
   TableBody,
@@ -9,26 +10,54 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Button } from "../ui/button";
+import { PencilLine, Trash2 } from "lucide-react";
 
 const ProductsTable = () => {
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await axios.get("/api/products");
+      //console.log(response);
+      setProducts(response.data.data);
+    };
+    fetchProducts();
+  }, []);
+
+  console.log(products);
   return (
     <Table>
-      <TableCaption>A list of your recent invoices.</TableCaption>
+      {/* opcional */}
+      {/* <TableCaption>A list of your recent invoices.</TableCaption> */}
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[100px]">Invoice</TableHead>
-          <TableHead>Status</TableHead>
-          <TableHead>Method</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
+          <TableHead className="w-[100px]">Id</TableHead>
+          <TableHead>Nombre</TableHead>
+          <TableHead>Descripcion</TableHead>
+          <TableHead>Precio</TableHead>
+          <TableHead className="text-right">Acciones</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRow>
-          <TableCell className="font-medium">INV001</TableCell>
-          <TableCell>Paid</TableCell>
-          <TableCell>Credit Card</TableCell>
-          <TableCell className="text-right">$250.00</TableCell>
-        </TableRow>
+        {products.map((product) => (
+          <TableRow product={product} key={product._id}>
+            <TableCell className="font-sm font-slate-300">
+              {product._id}
+            </TableCell>
+            <TableCell>{product.title}</TableCell>
+            <TableCell>{product.description}</TableCell>
+            <TableCell>{product.price}</TableCell>
+            <TableCell className="text-right">
+              <Button variant="outline">
+                <PencilLine />
+              </Button>
+              <Button variant="destructive" className="ml-1">
+                <Trash2 />
+              </Button>
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );
