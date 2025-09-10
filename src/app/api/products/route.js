@@ -15,7 +15,7 @@ export async function GET() {
 
   try {
     const products = await Product.find({});
-    return NextResponse.json({ succes: true, data: products });
+    return NextResponse.json({ succes: true, data: products }, { status: 200 });
   } catch (error) {
     return NextResponse.json(
       { succes: false, error: error.message },

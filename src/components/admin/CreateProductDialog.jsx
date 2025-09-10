@@ -52,8 +52,8 @@ const CreateProductDialog = ({ onProductCreated }) => {
         },
       });
       toast.success("Producto creado con exito");
-      setProductData(initialState);
-      setImageFile(null);
+      setProductData(initialState); //borrarme el formulario
+      setImageFile(null); //quite la imagen del buffer
       setOpen(false);
 
       //aqui esta la magia llamamos a la funcion que le pasamos desde el padre "products"

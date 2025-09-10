@@ -31,6 +31,9 @@ export async function GET(request, { params }) {
   }
 }
 
+//CRUD= Create - Read - Update - Delete (Crear-Leer-Actualizar-Borrar)
+//Post - Get - Put - Delete
+
 //Borrar 1 producto
 export async function DELETE(request, { params }) {
   await dbConnect();
@@ -62,6 +65,39 @@ export async function DELETE(request, { params }) {
     );
   } catch (error) {
     console.log("Error al eliminar el producto", error);
+    return NextResponse.json(
+      { success: false, error: "Error interno del server" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PUT(request, { params }) {
+  await dbConnect();
+
+  try {
+    //1.Obtener los datos del cuerpo de la peticion
+    const body = await request.json();
+    const { title, description, price, category } = body;
+
+    //2.Usamos el metodo de mongoose findByIdAndUpdate
+    //es la forma mas directa  de encontrar y actualizar en 1 solo paso el producto
+    const updatedProduct = await Product.findByIdAndUpdate(
+      params.productId,
+      { title, description, price, category },
+      //3. Esta opcion es  Vital sin ella  mongoose nos devuelve el documento
+      //ANTES de la actualizacion con 'new:true' nos devolvera el documento ya Actualizado
+      { new: true, runValidators: true }
+
+      //como reto hacer una validacion 'if' que sino encuentra el producto
+      //retorne una respuesta de NEXT
+    );
+    return NextResponse.json(
+      { success: true, data: updatedProduct },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log("Error al actualizar el producto", error);
     return NextResponse.json(
       { success: false, error: "Error interno del server" },
       { status: 500 }
