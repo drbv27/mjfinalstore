@@ -1,3 +1,4 @@
+//src/app/landing/page.jsx
 "use client";
 
 import Counter from "@/components/Counter";

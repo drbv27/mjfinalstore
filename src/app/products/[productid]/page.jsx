@@ -1,3 +1,4 @@
+//src/app/products/[productId]/page.jsx
 "use client";
 
 import React, { useEffect, useState } from "react";

@@ -1,3 +1,4 @@
+//src/components/layout/AppSidebar.jsx
 import { Home, Boxes, Rocket, Settings, Settings2 } from "lucide-react";
 
 import {

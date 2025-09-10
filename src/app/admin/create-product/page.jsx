@@ -1,3 +1,4 @@
+//src/app/admin/create-product/page.jsx
 "use client";
 import { useState } from "react";
 import axios from "axios";
