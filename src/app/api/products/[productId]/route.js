@@ -36,16 +36,32 @@ export async function DELETE(request, { params }) {
   await dbConnect();
 
   try {
-    const deleteProduct = await Product.findByIdAndDelete(params.productId);
-    if (!deleteProduct) {
+    //1. Buscar el producto antes de borrarlo
+    //para obtener la url de la imagen
+    const productToDelete = await Product.findById(params.productId);
+
+    if (!productToDelete) {
       return NextResponse.json(
         { success: false, error: "Producto no encontrado" },
         { status: 404 }
       );
     }
-    //TODO: Borrar la imagen de Cloudinary
-    return NextResponse.json({ success: true, data: {} }, { status: 200 });
+    //2.Si el producto tiene imagen, la borramos de Cloudinary
+    //Tip: coloquemos una validacion si un producto no tiene imagen
+    if (productToDelete.imagePublicId) {
+      await cloudinary.uploader.destroy(productToDelete.imagePublicId);
+    }
+
+    //3.ahora si podemos borrar el producto de Mongo DB
+    //const deleteProduct = await Product.findByIdAndDelete(params.productId);
+    await Product.findByIdAndDelete(params.productId);
+
+    return NextResponse.json(
+      { success: true, message: "Producto eliminado con exito" },
+      { status: 200 }
+    );
   } catch (error) {
+    console.log("Error al eliminar el producto", error);
     return NextResponse.json(
       { success: false, error: "Error interno del server" },
       { status: 500 }

@@ -14,12 +14,13 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 
 const initialState = {
   title: "",
   description: "",
   price: "",
-  category: "electronics",
+  category: "",
 };
 
 const CreateProductDialog = ({ onProductCreated }) => {
@@ -29,8 +30,44 @@ const CreateProductDialog = ({ onProductCreated }) => {
   const [open, setOpen] = useState(false);
 
   const handleSubmit = async (e) => {
-    console.log("enviando");
+    e.preventDefault();
+    if (!imageFile) {
+      alert("por favor adjunta la imagen del producto");
+      return;
+    }
+    setIsSubmitting(true);
+
+    const formData = new FormData();
+    formData.append("title", productData.title);
+    formData.append("description", productData.description);
+    formData.append("price", productData.price);
+    formData.append("category", productData.category);
+    formData.append("image", imageFile);
+
+    try {
+      //await axios.post("1 ruta interna de mi back",2 aqui la informacion,3 aqui van los headers)
+      await axios.post("/api/products", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      toast.success("Producto creado con exito");
+      setProductData(initialState);
+      setImageFile(null);
+      setOpen(false);
+
+      //aqui esta la magia llamamos a la funcion que le pasamos desde el padre "products"
+      if (onProductCreated) {
+        onProductCreated();
+      }
+    } catch (error) {
+      //console.error("Error al crear el producto", error);
+      toast.error("Hubo un problema al crear el producto");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProductData((prev) => ({ ...prev, [name]: value }));
@@ -41,8 +78,8 @@ const CreateProductDialog = ({ onProductCreated }) => {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
         <Button>Crear Producto</Button>
       </DialogTrigger>
 
@@ -88,7 +125,9 @@ const CreateProductDialog = ({ onProductCreated }) => {
             name="image"
             onChange={handleFileChange}
           />
-          {/* <Button>{isSubmitting ? "Guardando" : "Guardar Producto"}</Button> */}
+          <Button className="w-full" type="submit" disabled={isSubmitting}>
+            {isSubmitting ? "Guardando" : "Guardar Producto"}
+          </Button>
         </form>
       </DialogContent>
     </Dialog>
