@@ -13,20 +13,22 @@ import {
 } from "@/components/ui/table";
 import { Button } from "../ui/button";
 import { PencilLine, Trash2 } from "lucide-react";
+import { toast } from "sonner";
 
-const ProductsTable = () => {
-  const [products, setProducts] = useState([]);
+const ProductsTable = ({ products, onDeleteProduct }) => {
+  const handleDelete = async (productId) => {
+    if (!confirm("Estas seguro que deseas eliminar el producto")) return;
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      const response = await axios.get("/api/products");
-      //console.log(response);
-      setProducts(response.data.data);
-    };
-    fetchProducts();
-  }, []);
+    try {
+      await axios.delete(`/api/products/${productId}`);
+      toast.success("Producto eliminado satisfactoriamente");
+      onDeleteProduct(productId); //notificamos al padre
+    } catch (error) {
+      toast.error("No se pudo eliminar el producto");
+      //console.log("error",error)
+    }
+  };
 
-  console.log(products);
   return (
     <Table>
       {/* opcional */}
@@ -53,7 +55,11 @@ const ProductsTable = () => {
               <Button variant="outline">
                 <PencilLine />
               </Button>
-              <Button variant="destructive" className="ml-1">
+              <Button
+                variant="destructive"
+                className="ml-1"
+                onClick={() => handleDelete(product._id)}
+              >
                 <Trash2 />
               </Button>
             </TableCell>
