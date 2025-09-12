@@ -5,10 +5,18 @@ import axios from "axios";
 import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import CreateProductDialog from "@/components/admin/CreateProductDialog";
+import EditProductDialog from "@/components/admin/EditProductDialog";
 import ProductsTable from "@/components/admin/ProductsTable";
 
 const AdminProductsPage = () => {
   const [products, setProducts] = useState([]);
+  const [isEditingDialogOpen, setIsEditingDialogOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleEditClick = (product) => {
+    setSelectedProduct(product);
+    setIsEditingDialogOpen(true);
+  };
 
   const fetchProducts = async () => {
     const response = await axios.get("/api/products");
@@ -32,7 +40,17 @@ const AdminProductsPage = () => {
         </h1>
         <CreateProductDialog onProductCreated={fetchProducts} />
       </div>
-      <ProductsTable products={products} onDeleteProduct={handleDelete} />
+      <ProductsTable
+        products={products}
+        onDeleteProduct={handleDelete}
+        onEditProduct={handleEditClick}
+      />
+      <EditProductDialog
+        product={selectedProduct}
+        onProductSaved={fetchProducts}
+        open={isEditingDialogOpen}
+        setOpen={setIsEditingDialogOpen}
+      />
     </div>
   );
 };

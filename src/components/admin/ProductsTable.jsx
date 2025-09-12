@@ -15,7 +15,7 @@ import { Button } from "../ui/button";
 import { PencilLine, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-const ProductsTable = ({ products, onDeleteProduct }) => {
+const ProductsTable = ({ products, onDeleteProduct, onEditProduct }) => {
   const handleDelete = async (productId) => {
     if (!confirm("Estas seguro que deseas eliminar el producto")) return;
 
@@ -52,7 +52,7 @@ const ProductsTable = ({ products, onDeleteProduct }) => {
             <TableCell>{product.description}</TableCell>
             <TableCell>{product.price}</TableCell>
             <TableCell className="text-right">
-              <Button variant="outline">
+              <Button variant="outline" onClick={() => onEditProduct(product)}>
                 <PencilLine />
               </Button>
               <Button
