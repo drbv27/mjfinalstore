@@ -39,7 +39,7 @@ const ShoppingCart = () => {
         {/* ustedes deben organizar el carrito */}
         <div>
           {items.map((item) => (
-            <p>
+            <p key={item._id}>
               {item.title}
               <button className="bg-slate-400 p-1">-</button>
               <span className="bg-teal-700 text-white">{item.quantity}</span>
