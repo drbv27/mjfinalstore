@@ -1,5 +1,5 @@
 //src/components/layout/AppSidebar.jsx
-import { Home, Boxes, Rocket, Settings, Settings2 } from "lucide-react";
+import { Home, Boxes, Rocket, Settings, Settings2, LogOut } from "lucide-react";
 
 import {
   Sidebar,
@@ -15,6 +15,8 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import ShoppingCart from "../cart/ShoppingCart";
 import Logo from "./Logo";
+import { SignOutButton } from "@clerk/nextjs";
+import { Button } from "@/components/ui/button";
 
 // Menu items.
 const items = [
@@ -70,6 +72,11 @@ export function AppSidebar() {
         <SidebarGroup>
           <SidebarGroupContent>
             <ShoppingCart />
+            <SignOutButton>
+              <Button className="bg-teal-700 text-white rounded-md shadow-md ml-12">
+                Salir <LogOut />
+              </Button>
+            </SignOutButton>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
