@@ -1,8 +1,8 @@
 //src/app/layout.jsx
 import localFont from "next/font/local";
 import "./globals.css";
-import { AppSidebar } from "@/components/layout/AppSidebar";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+/* import { AppSidebar } from "@/components/layout/AppSidebar";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"; */
 import { Toaster } from "@/components/ui/sonner";
 import {
   ClerkProvider,
@@ -37,11 +37,7 @@ export default function RootLayout({ children }) {
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <SidebarProvider>
-            <AppSidebar />
-            <SidebarTrigger />
-            {children}
-          </SidebarProvider>
+          {children}
           <Toaster />
         </body>
       </html>

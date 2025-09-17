@@ -1,4 +1,5 @@
 //src/components/layout/AppSidebar.jsx
+"use client";
 import { Home, Boxes, Rocket, Settings, Settings2, LogOut } from "lucide-react";
 
 import {
@@ -15,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 import ShoppingCart from "../cart/ShoppingCart";
 import Logo from "./Logo";
-import { SignOutButton } from "@clerk/nextjs";
+import { SignOutButton, useAuth } from "@clerk/nextjs";
 import { Button } from "@/components/ui/button";
 
 // Menu items.
@@ -38,6 +39,14 @@ const items = [
 ];
 
 export function AppSidebar() {
+  const { isSignedIn, sessionClaims } = useAuth();
+
+  const isAdmin = sessionClaims?.metadata?.role === "admin";
+
+  //console.log(sessionClaims);
+
+  //console.log(isAdmin);
+
   return (
     <Sidebar>
       <SidebarContent className="bg-teal-50 text-teal-700 font-semibold flex flex-col justify-between">
@@ -58,14 +67,17 @@ export function AppSidebar() {
                 </SidebarMenuItem>
               ))}
               <Separator className="my-2" />
-              <SidebarMenuItem>
-                <SidebarMenuButton asChild>
-                  <Link href="/admin/products">
-                    <Settings />
-                    <span>Admin</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
+
+              {isAdmin && (
+                <SidebarMenuItem>
+                  <SidebarMenuButton asChild>
+                    <Link href="/admin/products">
+                      <Settings />
+                      <span>Admin</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
